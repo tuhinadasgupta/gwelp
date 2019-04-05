@@ -1,5 +1,6 @@
 package edu.gwu.gwelp
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -10,6 +11,7 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity() {
@@ -57,26 +59,37 @@ class MainActivity : AppCompatActivity() {
             firebaseAuth.signInWithEmailAndPassword(
                 inputtedUsername,
                 inputtedPassword
-            ).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+            ).addOnSuccessListener { result->
+                val currentUser: FirebaseUser? = firebaseAuth.currentUser
+                Toast.makeText(
+                    this,
+                    "Logged in as: ${currentUser!!.email}",
+                    Toast.LENGTH_LONG
+                ).show()
 
-                    val currentUser: FirebaseUser? = firebaseAuth.currentUser
-                    Toast.makeText(
-                        this,
-                        "Logged in as: ${currentUser!!.email}",
-                        Toast.LENGTH_LONG
-                    ).show()
-
-                    // User logged in, advance to the next screen
-//                    val intent: Intent = Intent(this, ::class.java)
-//                    startActivity(intent)
-                } else {
-                    val exception = task.exception
-                    Toast.makeText(
-                        this,
-                        "Failed to login: $exception",
-                        Toast.LENGTH_LONG
-                    ).show()
+                // Advance to the next screen
+//                val intent: Intent = Intent(this, ::class.java)
+//                startActivity(intent)
+            }.addOnFailureListener { exception->
+                when (exception) {
+                    is FirebaseAuthInvalidCredentialsException ->
+                        Toast.makeText(
+                            this,
+                            "Invalid credentials, try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    is FirebaseAuthInvalidUserException ->
+                        Toast.makeText(
+                            this,
+                            "We don't recognize that username, want to sign up?",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    else ->
+                        Toast.makeText(
+                            this,
+                            "Failed to login: $exception",
+                            Toast.LENGTH_LONG
+                        ).show()
                 }
             }
 
