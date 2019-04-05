@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "338662810910",
+    "firebase_url": "https://gwelp-4fa43.firebaseio.com",
+    "project_id": "gwelp-4fa43",
+    "storage_bucket": "gwelp-4fa43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338662810910:android:d8050674c8ffdd84",
+        "android_client_info": {
+          "package_name": "edu.gwu.gwelp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSv6W-Ohr-EGe231VmOzuDRFM06-nuRMY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338662810910-6b8mdfork5muk9hf3obv69nr3q0iau4q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
