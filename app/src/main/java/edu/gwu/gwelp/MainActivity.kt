@@ -59,9 +59,23 @@ class MainActivity : AppCompatActivity() {
 
         // Reading from preferences, indicate default if not present
         val savedUsername = sharedPrefs.getString("SAVED_USERNAME", "")
-        // Based on prefs, set switch and username
-        rememberUsername.isChecked = !savedUsername.isNullOrEmpty()
-        username.setText(savedUsername)
+        val savedPassword = sharedPrefs.getString("SAVED_PASSWORD", "")
+
+        // Based on prefs, set switches and text inputs
+        if (savedUsername.isNullOrEmpty()) {
+            rememberUsername.isChecked = false
+
+        } else {
+            rememberUsername.isChecked = true
+            username.setText(savedUsername)
+        }
+        if (savedPassword.isNullOrEmpty()) {
+            rememberPassword.isChecked = false
+
+        } else {
+            rememberPassword.isChecked = true
+            password.setText(savedPassword)
+        }
 
         // Listen for whether Remember Username switch is on or off
         rememberUsername.setOnCheckedChangeListener { view, isChecked ->
@@ -71,6 +85,14 @@ class MainActivity : AppCompatActivity() {
             } else {
                 // Remove saved destination when user unchecks switch
                 sharedPrefs.edit().remove("SAVED_USERNAME").apply()
+            }
+        }
+        // Listen for whether Remember Password switch is on or off
+        rememberPassword.setOnCheckedChangeListener { view, isChecked ->
+            if (isChecked) {
+                sharedPrefs.edit().putString("SAVED_PASSWORD", password.text.toString()).apply()
+            } else {
+                sharedPrefs.edit().remove("SAVED_PASSWORD").apply()
             }
         }
 
