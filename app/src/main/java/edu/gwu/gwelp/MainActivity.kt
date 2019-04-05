@@ -1,14 +1,12 @@
 package edu.gwu.gwelp
 
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -20,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var password: EditText
     private lateinit var login: Button
     private lateinit var progressBar: ProgressBar
+    private lateinit var rememberUsername: Switch
+    private lateinit var rememberPassword: Switch
     private lateinit var firebaseAuth: FirebaseAuth
 
     // Anonymous class implementing TextWatcher
@@ -42,15 +42,37 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Pass the name and the file-create mode (private to the app)
+        val sharedPrefs = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
+
         firebaseAuth = FirebaseAuth.getInstance()
 
         username = findViewById(R.id.username)
         password = findViewById(R.id.password)
         login = findViewById(R.id.login)
         progressBar = findViewById(R.id.progressBar)
+        rememberUsername = findViewById(R.id.rememberSwitchUsername)
+        rememberPassword = findViewById(R.id.rememberSwitchPassword)
 
         username.addTextChangedListener(textWatcher)
         password.addTextChangedListener(textWatcher)
+
+        // Reading from preferences, indicate default if not present
+        val savedUsername = sharedPrefs.getString("SAVED_USERNAME", "")
+        // Based on prefs, set switch and username
+        rememberUsername.isChecked = !savedUsername.isNullOrEmpty()
+        username.setText(savedUsername)
+
+        // Listen for whether Remember Username switch is on or off
+        rememberUsername.setOnCheckedChangeListener { view, isChecked ->
+            if (isChecked) {
+                // Write to preferences (make sure to call apply)
+                sharedPrefs.edit().putString("SAVED_USERNAME", username.text.toString()).apply()
+            } else {
+                // Remove saved destination when user unchecks switch
+                sharedPrefs.edit().remove("SAVED_USERNAME").apply()
+            }
+        }
 
         login.setOnClickListener {
             val inputtedUsername: String = username.text.toString().trim()
