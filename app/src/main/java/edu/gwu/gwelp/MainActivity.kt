@@ -64,7 +64,11 @@ class MainActivity : AppCompatActivity() {
         // Based on prefs, set switches and text inputs
         rememberUsername.isChecked = !savedUsername.isNullOrEmpty()
         rememberPassword.isChecked = !savedPassword.isNullOrEmpty()
-
+        
+        // Set the username and password to be the saved text
+        username.setText(savedUsername)
+        password.setText(savedPassword)
+        
         // Listen for whether Remember Username switch is on or off
         rememberUsername.setOnCheckedChangeListener { view, isChecked ->
             if (isChecked) {
