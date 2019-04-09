@@ -62,20 +62,8 @@ class MainActivity : AppCompatActivity() {
         val savedPassword = sharedPrefs.getString("SAVED_PASSWORD", "")
 
         // Based on prefs, set switches and text inputs
-        if (savedUsername.isNullOrEmpty()) {
-            rememberUsername.isChecked = false
-
-        } else {
-            rememberUsername.isChecked = true
-            username.setText(savedUsername)
-        }
-        if (savedPassword.isNullOrEmpty()) {
-            rememberPassword.isChecked = false
-
-        } else {
-            rememberPassword.isChecked = true
-            password.setText(savedPassword)
-        }
+        rememberUsername.isChecked = !savedUsername.isNullOrEmpty()
+        rememberPassword.isChecked = !savedPassword.isNullOrEmpty()
 
         // Listen for whether Remember Username switch is on or off
         rememberUsername.setOnCheckedChangeListener { view, isChecked ->
