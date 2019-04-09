@@ -1,5 +1,7 @@
 package edu.gwu.gwelp
 
+
+
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -74,28 +76,32 @@ class MainActivity : AppCompatActivity() {
         signUp.setOnClickListener {
             val inputtedUsername: String = username.text.toString().trim()
             val inputtedPassword: String = password.text.toString().trim()
-            firebaseAuth.createUserWithEmailAndPassword(
-                inputtedUsername,
-                inputtedPassword
-            ).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // If Sign Up is successful, Firebase automatically logs
-                    // in as that user too (e.g. currentUser is set)
-                    val currentUser: FirebaseUser? = firebaseAuth.currentUser
-                    Toast.makeText(
-                        this,
-                        "Registered as: ${currentUser!!.email}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else {
-                    val exception = task.exception
-                    Toast.makeText(
-                        this,
-                        "Failed to register: $exception",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
+            val intent = Intent(this, SignUp::class.java)
+            intent.putExtra("Username", inputtedUsername)
+            intent.putExtra("Password", inputtedPassword)
+            startActivity(intent)
+//            firebaseAuth.createUserWithEmailAndPassword(
+//                inputtedUsername,
+//                inputtedPassword
+//            ).addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    // If Sign Up is successful, Firebase automatically logs
+//                    // in as that user too (e.g. currentUser is set)
+//                    val currentUser: FirebaseUser? = firebaseAuth.currentUser
+//                    Toast.makeText(
+//                        this,
+//                        "Registered as: ${currentUser!!.email}",
+//                        Toast.LENGTH_LONG
+//                    ).show()
+//                } else {
+//                    val exception = task.exception
+//                    Toast.makeText(
+//                        this,
+//                        "Failed to register: $exception",
+//                        Toast.LENGTH_LONG
+//                    ).show()
+//                }
+//            }
         }
         // This is similar to the TextWatcher -- setOnClickListener takes a View.OnClickListener
         // as a parameter, which is an **interface with only one method**, so in this special case
