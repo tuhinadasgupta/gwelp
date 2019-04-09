@@ -1,151 +1,132 @@
 package edu.gwu.gwelp
 
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseUser
+
 class MainActivity : AppCompatActivity() {
-    /*
-    * These variables are "lateinit" because can't actually assign a value to them until
-    * onCreate() is called (e.g. we are promising to the Kotlin compiler that these will be
-    * "initialized later").
-    *
-    * Alternative is to make them nullable and set them equal to null, but that's not as nice to
-    * work with.
-    *   private var username: EditText? = null
-    */
+
     private lateinit var username: EditText
     private lateinit var password: EditText
     private lateinit var login: Button
-    private lateinit var signUp: Button
     private lateinit var progressBar: ProgressBar
+    private lateinit var rememberUsername: Switch
+    private lateinit var rememberPassword: Switch
     private lateinit var firebaseAuth: FirebaseAuth
-    /**
-     * We're creating an "anonymous class" here (e.g. we're creating a class which implements
-     * TextWatcher, but not creating an explicit class).
-     *
-     * object : TextWatcher == "creating a new object which implements TextWatcher"
-     */
+
+    // Anonymous class implementing TextWatcher
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {}
+
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             val inputtedUsername: String = username.text.toString().trim()
             val inputtedPassword: String = password.text.toString().trim()
             val enableButton: Boolean = inputtedUsername.isNotEmpty() && inputtedPassword.isNotEmpty()
+
             login.isEnabled = enableButton
         }
+
     }
-    private val textWatcher2: TextWatcher = object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) {}
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            val inputtedUsername2: String = username.text.toString().trim()
-            val inputtedPassword2: String = password.text.toString().trim()
-            val enableButton2: Boolean = inputtedUsername2.isNotEmpty() && inputtedPassword2.isNotEmpty()
-            signUp.isEnabled = enableButton2
-        }
-    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Pass the name and the file-create mode (private to the app)
+        val sharedPrefs = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE)
+
         firebaseAuth = FirebaseAuth.getInstance()
-        signUp = findViewById(R.id.signUp)
-        Log.d("MainActivity", "onCreate called")
+
         username = findViewById(R.id.username)
         password = findViewById(R.id.password)
         login = findViewById(R.id.login)
         progressBar = findViewById(R.id.progressBar)
+        rememberUsername = findViewById(R.id.rememberSwitchUsername)
+        rememberPassword = findViewById(R.id.rememberSwitchPassword)
+
         username.addTextChangedListener(textWatcher)
         password.addTextChangedListener(textWatcher)
-        username.addTextChangedListener(textWatcher2)
-        password.addTextChangedListener(textWatcher2)
 
-        signUp.setOnClickListener {
-            val inputtedUsername: String = username.text.toString().trim()
-            val inputtedPassword: String = password.text.toString().trim()
-            firebaseAuth.createUserWithEmailAndPassword(
-                inputtedUsername,
-                inputtedPassword
-            ).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // If Sign Up is successful, Firebase automatically logs
-                    // in as that user too (e.g. currentUser is set)
-                    val currentUser: FirebaseUser? = firebaseAuth.currentUser
-                    Toast.makeText(
-                        this,
-                        "Registered as: ${currentUser!!.email}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else {
-                    val exception = task.exception
-                    Toast.makeText(
-                        this,
-                        "Failed to register: $exception",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+        // Reading from preferences, indicate default if not present
+        val savedUsername = sharedPrefs.getString("SAVED_USERNAME", "")
+        val savedPassword = sharedPrefs.getString("SAVED_PASSWORD", "")
+
+        // Based on prefs, set switches and text inputs
+        rememberUsername.isChecked = !savedUsername.isNullOrEmpty()
+        rememberPassword.isChecked = !savedPassword.isNullOrEmpty()
+
+        // Listen for whether Remember Username switch is on or off
+        rememberUsername.setOnCheckedChangeListener { view, isChecked ->
+            if (isChecked) {
+                // Write to preferences (make sure to call apply)
+                sharedPrefs.edit().putString("SAVED_USERNAME", username.text.toString()).apply()
+            } else {
+                // Remove saved destination when user unchecks switch
+                sharedPrefs.edit().remove("SAVED_USERNAME").apply()
             }
         }
-        // This is similar to the TextWatcher -- setOnClickListener takes a View.OnClickListener
-        // as a parameter, which is an **interface with only one method**, so in this special case
-        // you can just use a lambda (e.g. just open brances) instead of doing
-        //      object : View.OnClickListener { ... }
+        // Listen for whether Remember Password switch is on or off
+        rememberPassword.setOnCheckedChangeListener { view, isChecked ->
+            if (isChecked) {
+                sharedPrefs.edit().putString("SAVED_PASSWORD", password.text.toString()).apply()
+            } else {
+                sharedPrefs.edit().remove("SAVED_PASSWORD").apply()
+            }
+        }
+
         login.setOnClickListener {
             val inputtedUsername: String = username.text.toString().trim()
             val inputtedPassword: String = password.text.toString().trim()
+
             firebaseAuth.signInWithEmailAndPassword(
                 inputtedUsername,
                 inputtedPassword
-            ).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val currentUser: FirebaseUser? = firebaseAuth.currentUser
-                    Toast.makeText(
-                        this,
-                        "Logged in as: ${currentUser!!.email}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    //login successful take user to new page
+            ).addOnSuccessListener { result->
+                val currentUser: FirebaseUser? = firebaseAuth.currentUser
+                Toast.makeText(
+                    this,
+                    "Logged in as: ${currentUser!!.email}",
+                    Toast.LENGTH_LONG
+                ).show()
 
-                } else {
-                    val exception = task.exception
-                    Toast.makeText(
-                        this,
-                        "Failed to login: $exception",
-                        Toast.LENGTH_LONG
-                    ).show()
+                // Advance to the next screen
+//                val intent: Intent = Intent(this, ::class.java)
+//                startActivity(intent)
+            }.addOnFailureListener { exception->
+                when (exception) {
+                    is FirebaseAuthInvalidCredentialsException ->
+                        Toast.makeText(
+                            this,
+                            "Invalid credentials, try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    is FirebaseAuthInvalidUserException ->
+                        Toast.makeText(
+                            this,
+                            "We don't recognize that username, want to sign up?",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    else ->
+                        Toast.makeText(
+                            this,
+                            "Failed to login: $exception",
+                            Toast.LENGTH_LONG
+                        ).show()
                 }
             }
+
+
         }
     }
-    override fun onStart() {
-        super.onStart()
-        Log.d("MainActivity", "onStart called")
-    }
-    override fun onResume() {
-        super.onResume()
-        Log.d("MainActivity", "onResume called")
-    }
-    override fun onPause() {
-        super.onPause()
-        Log.d("MainActivity", "onPause called")
-    }
-    override fun onStop() {
-        super.onStop()
-        Log.d("MainActivity", "onStop called")
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("MainActivity", "onDestroy called")
-    }
+
 }
