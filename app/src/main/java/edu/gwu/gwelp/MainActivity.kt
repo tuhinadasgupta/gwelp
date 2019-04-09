@@ -74,11 +74,11 @@ class MainActivity : AppCompatActivity() {
         password.addTextChangedListener(textWatcher2)
 
         signUp.setOnClickListener {
-            val inputtedUsername: String = username.text.toString().trim()
-            val inputtedPassword: String = password.text.toString().trim()
+//            val inputtedUsername: String = username.text.toString().trim()
+//            val inputtedPassword: String = password.text.toString().trim()
             val intent = Intent(this, SignUp::class.java)
-            intent.putExtra("Username", inputtedUsername)
-            intent.putExtra("Password", inputtedPassword)
+//            intent.putExtra("Username", inputtedUsername)
+//            intent.putExtra("Password", inputtedPassword)
             startActivity(intent)
 //            firebaseAuth.createUserWithEmailAndPassword(
 //                inputtedUsername,
