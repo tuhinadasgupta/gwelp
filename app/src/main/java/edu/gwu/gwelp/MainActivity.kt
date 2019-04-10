@@ -46,18 +46,19 @@ class MainActivity : AppCompatActivity() {
             val inputtedPassword: String = password.text.toString().trim()
             val enableButton: Boolean = inputtedUsername.isNotEmpty() && inputtedPassword.isNotEmpty()
             login.isEnabled = enableButton
+
         }
     }
-    private val textWatcher2: TextWatcher = object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) {}
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            val inputtedUsername2: String = username.text.toString().trim()
-            val inputtedPassword2: String = password.text.toString().trim()
-            val enableButton2: Boolean = inputtedUsername2.isNotEmpty() && inputtedPassword2.isNotEmpty()
-            signUp.isEnabled = enableButton2
-        }
-    }
+//    private val textWatcher2: TextWatcher = object : TextWatcher {
+//        override fun afterTextChanged(s: Editable?) {}
+//        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//            val inputtedUsername2: String = username.text.toString().trim()
+//            val inputtedPassword2: String = password.text.toString().trim()
+//            val enableButton2: Boolean = inputtedUsername2.isNotEmpty() && inputtedPassword2.isNotEmpty()
+//            signUp.isEnabled = enableButton2
+//        }
+ //   }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -68,40 +69,18 @@ class MainActivity : AppCompatActivity() {
         password = findViewById(R.id.password)
         login = findViewById(R.id.login)
         progressBar = findViewById(R.id.progressBar)
+
         username.addTextChangedListener(textWatcher)
         password.addTextChangedListener(textWatcher)
-        username.addTextChangedListener(textWatcher2)
-        password.addTextChangedListener(textWatcher2)
+
 
         signUp.setOnClickListener {
-//            val inputtedUsername: String = username.text.toString().trim()
-//            val inputtedPassword: String = password.text.toString().trim()
+            //val inputtedUsername: String = username.text.toString().trim()
+            //val inputtedPassword: String = password.text.toString().trim()
             val intent = Intent(this, SignUp::class.java)
-//            intent.putExtra("Username", inputtedUsername)
-//            intent.putExtra("Password", inputtedPassword)
+            //intent.putExtra("Username", inputtedUsername)
+            //intent.putExtra("Password", inputtedPassword)
             startActivity(intent)
-//            firebaseAuth.createUserWithEmailAndPassword(
-//                inputtedUsername,
-//                inputtedPassword
-//            ).addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    // If Sign Up is successful, Firebase automatically logs
-//                    // in as that user too (e.g. currentUser is set)
-//                    val currentUser: FirebaseUser? = firebaseAuth.currentUser
-//                    Toast.makeText(
-//                        this,
-//                        "Registered as: ${currentUser!!.email}",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                } else {
-//                    val exception = task.exception
-//                    Toast.makeText(
-//                        this,
-//                        "Failed to register: $exception",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                }
-//            }
         }
         // This is similar to the TextWatcher -- setOnClickListener takes a View.OnClickListener
         // as a parameter, which is an **interface with only one method**, so in this special case
