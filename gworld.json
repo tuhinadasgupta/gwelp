@@ -1,0 +1,13 @@
+[{
+	name: "&pizza", 
+	address: "2224 F St NW, Washington, DC 20037",
+	lat: 38.897110,
+	lon: -77.049591,
+	},
+	{
+	name: "7th Hill Pizza Palisades", 
+	address: "4885 MacArthur Blvd NW, Washington, DC 20007",
+	lat: 38.917827,
+	lon: -77.096881,
+	}
+]
