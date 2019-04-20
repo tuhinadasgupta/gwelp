@@ -32,8 +32,8 @@ class MainActivity : AppCompatActivity() {
             val inputtedUsername: String = username.text.toString().trim()
             val inputtedPassword: String = password.text.toString().trim()
             val enableButton: Boolean = inputtedUsername.isNotEmpty() && inputtedPassword.isNotEmpty()
-
             login.isEnabled = enableButton
+
         }
 
     }
@@ -51,6 +51,15 @@ class MainActivity : AppCompatActivity() {
         password = findViewById(R.id.password)
         login = findViewById(R.id.login)
         progressBar = findViewById(R.id.progressBar)
+
+        username.addTextChangedListener(textWatcher)
+        password.addTextChangedListener(textWatcher)
+
+
+        signUp.setOnClickListener {
+            val intent = Intent(this, SignUp::class.java)
+            startActivity(intent)
+        }
         rememberUsername = findViewById(R.id.rememberSwitchUsername)
         rememberPassword = findViewById(R.id.rememberSwitchPassword)
 
