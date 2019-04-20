@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         signUp.setOnClickListener {
             val intent = Intent(this, SignUp::class.java)
             startActivity(intent)
+        }
         rememberUsername = findViewById(R.id.rememberSwitchUsername)
         rememberPassword = findViewById(R.id.rememberSwitchPassword)
 
