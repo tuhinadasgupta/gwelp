@@ -15,7 +15,7 @@ class LandmarksActivity: AppCompatActivity()  {
                 "National Museum of Women in the Arts",
                 "Lincoln Memorial",
                 "The White House",
-                "World Bank",
+                "World Bank Group",
                 "AMC Georgetown 14",
                 "Dupont Circle",
                 "Farragut Square"
