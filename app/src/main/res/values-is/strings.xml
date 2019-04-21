@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Gwelp</string>
+    <string name="login">Skrá inn</string>
+    <string name="username">Notendanafn</string>
+    <string name="password">Lykilorð</string>
+    <string name="cpassword">Staðfesta lykilorð</string>
+    <string name="csignup">Staðfestu að skrá þig</string>
+    <string name="sign_up">Skráðu þig</string>
+    <string name="remember_username">Mundu notendanafne</string>
+    <string name="remember_password">Muna lykilorð</string>
+    <string name="landmark_title">Veldu kennileiti:</string>
+</resources>
