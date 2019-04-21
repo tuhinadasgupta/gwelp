@@ -10,3 +10,6 @@
 - AMC Georgetown 14: 3111 K St NW, Washington, DC 20007
 - Dupont Circle: 1 Dupont Cir NW, Washington, DC 20036
 - Farragut Square: 912 17th St NW, Washington, DC 20006
+
+## Workflow  
+Landmark selected by user -> geocoding to address -> yelp search api to filter nearest 100 restaurants -> find first 3 that are on gworld -> put results in yelp review api -> display restaurants and top 3 reviews of each restaurant 
