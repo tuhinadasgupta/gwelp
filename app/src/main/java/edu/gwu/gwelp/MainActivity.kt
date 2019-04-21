@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var username: EditText
     private lateinit var password: EditText
     private lateinit var login: Button
+    private lateinit var signUp: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var rememberUsername: Switch
     private lateinit var rememberPassword: Switch
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         username = findViewById(R.id.username)
         password = findViewById(R.id.password)
         login = findViewById(R.id.login)
+        signUp = findViewById(R.id.signUp)
         progressBar = findViewById(R.id.progressBar)
 
         username.addTextChangedListener(textWatcher)
@@ -113,8 +115,8 @@ class MainActivity : AppCompatActivity() {
                 ).show()
 
                 // Advance to the next screen
-//                val intent: Intent = Intent(this, ::class.java)
-//                startActivity(intent)
+                val intent: Intent = Intent(this, LandmarksActivity::class.java)
+                startActivity(intent)
             }.addOnFailureListener { exception->
                 when (exception) {
                     is FirebaseAuthInvalidCredentialsException ->
