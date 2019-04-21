@@ -11,4 +11,4 @@
 /build
 /captures
 .externalNativeBuild
-/app/src/main/res/values/yelp_api_key.xml
+yelp_api_key.xml
