@@ -1,4 +1,7 @@
 package edu.gwu.gwelp
 
-class LandmarksActivity {
+import android.support.v7.app.AppCompatActivity
+
+class LandmarksActivity: AppCompatActivity()  {
+
 }
