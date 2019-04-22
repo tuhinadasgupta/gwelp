@@ -2,39 +2,27 @@ package edu.gwu.gwelp
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 
 class LandmarksActivity: AppCompatActivity()  {
-    companion object {
-        val LANDMARK_NAMES: List<String> =
-            listOf(
-                "UN Foundation",
-                "Farragut West Metro Station",
-                "Foggy Bottom Metro Station",
-                "National Museum of Women in the Arts",
-                "Lincoln Memorial",
-                "The White House",
-                "World Bank Group",
-                "AMC Georgetown 14",
-                "Dupont Circle",
-                "Farragut Square"
-            )
-    }
-
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var spinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_landmarks)
+        setContentView(R.layout.activity_spinner)
+        spinner = findViewById(R.id.spinner)
 
-        recyclerView = findViewById(R.id.recyclerView)
-
-        // Set the direction of list to be vertical
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        // Create the adapter and assign it to the RecyclerView
-        recyclerView.adapter = LandmarksAdapter(LANDMARK_NAMES)
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.places_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            spinner.adapter = adapter
+        }
 
     }
 

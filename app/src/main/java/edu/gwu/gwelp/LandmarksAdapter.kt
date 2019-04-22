@@ -20,7 +20,6 @@ class LandmarksAdapter constructor(private val landmarks: List<String>) : Recycl
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentLandmark = landmarks[position]
-
         holder.nameTextView.text = currentLandmark
 
     }
@@ -30,7 +29,6 @@ class LandmarksAdapter constructor(private val landmarks: List<String>) : Recycl
      * expensive operation, so this prevents you from needing to do it again when a row is recycled.
      */
     class ViewHolder constructor(view: View) : RecyclerView.ViewHolder(view) {
-
         val nameTextView: TextView = view.findViewById(R.id.landmark_name)
 
     }
