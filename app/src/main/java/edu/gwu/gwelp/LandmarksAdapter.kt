@@ -10,6 +10,7 @@ class LandmarksAdapter constructor(private val landmarks: List<String>) : Recycl
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         // Open & parse XML file
+        //unsure about line below this
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.row_landmark, parent, false)
 
         // Create a new ViewHolder
