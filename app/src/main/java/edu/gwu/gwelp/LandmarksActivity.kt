@@ -1,5 +1,8 @@
 package edu.gwu.gwelp
 
+import android.content.Intent
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -7,9 +10,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import java.util.*
 
 class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener  {
     private lateinit var spinner: Spinner
+    private lateinit var first: Address
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +45,12 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                 "$selected was selected!",
                 Toast.LENGTH_LONG
             ).show()
+
+            //new intent page to be opened
+//            val intent = Intent(this, ::class.java)
+//            intent.putExtra("Landmark", selected)
+//            startActivity(intent)
         }
-        //new intent page to be opened
     }
 
     override fun onNothingSelected(parent: AdapterView<*>) {
