@@ -10,6 +10,7 @@ class LandmarksAdapter constructor(private val landmarks: List<String>) : Recycl
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         // Open & parse XML file
+        //unsure about line below this
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.row_landmark, parent, false)
 
         // Create a new ViewHolder
@@ -20,7 +21,6 @@ class LandmarksAdapter constructor(private val landmarks: List<String>) : Recycl
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentLandmark = landmarks[position]
-
         holder.nameTextView.text = currentLandmark
 
     }
@@ -30,7 +30,6 @@ class LandmarksAdapter constructor(private val landmarks: List<String>) : Recycl
      * expensive operation, so this prevents you from needing to do it again when a row is recycled.
      */
     class ViewHolder constructor(view: View) : RecyclerView.ViewHolder(view) {
-
         val nameTextView: TextView = view.findViewById(R.id.landmark_name)
 
     }

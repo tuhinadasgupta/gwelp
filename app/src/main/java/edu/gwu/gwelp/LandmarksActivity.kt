@@ -1,40 +1,65 @@
 package edu.gwu.gwelp
 
+import android.content.Intent
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.Toast
+import java.util.*
 
-class LandmarksActivity: AppCompatActivity()  {
-    companion object {
-        val LANDMARK_NAMES: List<String> =
-            listOf(
-                "UN Foundation",
-                "Farragut West Metro Station",
-                "Foggy Bottom Metro Station",
-                "National Museum of Women in the Arts",
-                "Lincoln Memorial",
-                "The White House",
-                "World Bank Group",
-                "AMC Georgetown 14",
-                "Dupont Circle",
-                "Farragut Square"
-            )
-    }
-
-    private lateinit var recyclerView: RecyclerView
+class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener  {
+    private lateinit var spinner: Spinner
+    private lateinit var first: Address
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_landmarks)
+        setContentView(R.layout.activity_spinner)
+        spinner = findViewById(R.id.spinner)
 
-        recyclerView = findViewById(R.id.recyclerView)
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.places_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            spinner.adapter = adapter
+        }
 
-        // Set the direction of list to be vertical
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        spinner.onItemSelectedListener = this
+    }
 
-        // Create the adapter and assign it to the RecyclerView
-        recyclerView.adapter = LandmarksAdapter(LANDMARK_NAMES)
+    override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+        // An item was selected. You can retrieve the selected item using
+        val selected : String
+        if (pos != 0) {
+             selected = parent.getItemAtPosition(pos) as String
+            Toast.makeText(
+                this,
+                "$selected was selected!",
+                Toast.LENGTH_LONG
+            ).show()
+
+            //new intent page to be opened
+//            val intent = Intent(this, ::class.java)
+//            intent.putExtra("Landmark", selected)
+//            startActivity(intent)
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>) {
+        // Another interface callback
+        Toast.makeText(
+            this,
+            "Please select one of the landmarks!",
+            Toast.LENGTH_LONG
+        ).show()
 
     }
 
