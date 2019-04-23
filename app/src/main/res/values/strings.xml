@@ -10,6 +10,7 @@
     <string name="remember_password">Remember Password</string>
     <string name="landmark_title">Select a Landmark:</string>
     <string-array name="places_array" >
+        <item>Select A Landmark: </item>
         <item>UN Foundation </item>
         <item>Farragut West Metro Station</item>
         <item>Foggy Bottom Metro Station</item>
