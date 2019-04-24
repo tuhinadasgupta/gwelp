@@ -1,12 +1,8 @@
 package edu.gwu.gwelp
 
 import android.content.Intent
-import android.location.Address
-import android.location.Geocoder
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import org.json.JSONArray
 import java.io.File
 import android.view.View
@@ -17,7 +13,6 @@ import android.widget.Toast
 
 class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener  {
     private lateinit var spinner: Spinner
-    private lateinit var first: Address
     private val yelpManager: YelpManager = YelpManager()
     private val businessesList: MutableList<Business> = mutableListOf()
 
@@ -105,10 +100,8 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                 val gworldLon = curr.getDouble("lon")
 
                 if (
-                    yelpBusiness.lat > gworldLat - .02
-                    && yelpBusiness.lat < gworldLat + .02
-                    && yelpBusiness.lon > gworldLon - .02
-                    && yelpBusiness.lon < gworldLon + .02
+                    yelpBusiness.lat.compareWithThreshold(gworldLat, .02)
+                    && yelpBusiness.lon.compareWithThreshold(gworldLon, .02)
                     && yelpBusiness.name == gworldName
                 ) {
                     // Yelp Business Reviews API call using yelpBusiness.id
@@ -124,6 +117,11 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
             }
         }
 
+    }
+
+    fun Double.compareWithThreshold(other: Double, threshold: Double): Boolean {
+        return this > other && this <= other + threshold ||
+                this < other && this >= other - threshold
     }
 
 }
