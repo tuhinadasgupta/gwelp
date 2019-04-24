@@ -9,6 +9,7 @@
     <string name="remember_username">Remember Username</string>
     <string name="remember_password">Remember Password</string>
     <string name="landmark_title">Select a Landmark:</string>
+    <string name="restnearland">Restaurants Near Landmark</string>
     <string-array name="places_array" >
         <item>Select A Landmark: </item>
         <item>UN Foundation </item>
