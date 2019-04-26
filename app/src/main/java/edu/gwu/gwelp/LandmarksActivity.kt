@@ -10,11 +10,15 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 
 class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener  {
     private lateinit var spinner: Spinner
     private val yelpManager: YelpManager = YelpManager()
     private val businessesList: MutableList<Business> = mutableListOf()
+    private val gworldList: MutableList<Business> = mutableListOf()
 
    // private lateinit var recyclerView: RecyclerView
 
@@ -89,20 +93,56 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     }
 
-    fun findGworldRestaurants(yelpResponse: List<Business>) {
-        val gworldString: String = File("/gworld.json").readText(Charsets.UTF_8)
-        val jsonArray = JSONArray(gworldString)
-        yelpResponse.forEach  { yelpBusiness->
-            for (i in 0 until jsonArray.length()) {
-                val curr = jsonArray.getJSONObject(i)
-                val gworldName = curr.getString("name")
-                val gworldLat = curr.getDouble("lat")
-                val gworldLon = curr.getDouble("lon")
+    // Parses gworld.json for future comparison with yelp businesses list
+    fun parseGworldFile() {
+        val reader = BufferedReader(
+            InputStreamReader(getAssets().open("filename.txt"), "UTF-8")
+        )
+        var resultsString: String? = null
+        try {
+            val results = StringBuilder()
+            while (true) {
+                val line = reader.readLine()
+                if (line == null) break
+                results.append(line)
+            }
+           resultsString = results.toString()
+        }
+        catch (e:IOException) {
+            //log the exception
+        }
+        finally {
+            reader.close()
+        }
 
+        val jsonArray = JSONArray(resultsString)
+        for (i in 0 until jsonArray.length()) {
+            val curr = jsonArray.getJSONObject(i)
+            val gworldName = curr.getString("name")
+            val gworldAddress = curr.getString("address")
+            val gworldLat = curr.getDouble("lat")
+            val gworldLon = curr.getDouble("lon")
+            gworldList.add (
+                Business(
+                    name = gworldName,
+                    id = "",
+                    address = gworldAddress,
+                    lat = gworldLat,
+                    lon = gworldLon
+                )
+            )
+        }
+    }
+
+    // Compares list of yelp businesses to list of gworld businesses
+    // Calls yelp api to retrieve review excerpts
+    fun findGworld(yelpResponse: List<Business>, gworlds: List<Business>) {
+        yelpResponse.forEach { yelpBusiness ->
+            gworlds.forEach { gworldBusiness ->
                 if (
-                    yelpBusiness.lat.compareWithThreshold(gworldLat, .02)
-                    && yelpBusiness.lon.compareWithThreshold(gworldLon, .02)
-                    && yelpBusiness.name == gworldName
+                    yelpBusiness.lat.compareWithThreshold(gworldBusiness.lat, .02)
+                    && yelpBusiness.lon.compareWithThreshold(gworldBusiness.lon, .02)
+                    && yelpBusiness.name == gworldBusiness.name
                 ) {
                     // Yelp Business Reviews API call using yelpBusiness.id
                     // Go to next activity displaying review excerpts
