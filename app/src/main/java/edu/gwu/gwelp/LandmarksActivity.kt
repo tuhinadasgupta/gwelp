@@ -106,7 +106,6 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                 ) {
                     // Yelp Business Reviews API call using yelpBusiness.id
                     // Go to next activity displaying review excerpts
-//                    val yelpManager = YelpManager()
 //                    yelpManager.retrieveReviews(
 //                        apiKey = getString(R.string.yelp_api_key),
 //                        businessId = yelpBusiness.id,
@@ -120,8 +119,8 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
     fun Double.compareWithThreshold(other: Double, threshold: Double): Boolean {
-        return this > other && this <= other + threshold ||
-                this < other && this >= other - threshold
+        return this >= other && this <= other + threshold ||
+                this <= other && this >= other - threshold
     }
 
 }
