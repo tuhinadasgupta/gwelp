@@ -20,16 +20,11 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
     private val businessesList: MutableList<Business> = mutableListOf()
     private val gworldList: MutableList<Business> = mutableListOf()
 
-   // private lateinit var recyclerView: RecyclerView
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_spinner)
         spinner = findViewById(R.id.spinner)
-
-//        recyclerView = findViewById(R.id.recyclerView)
-//        recyclerView.layoutManager = LinearLayoutManager(this)
 
         ArrayAdapter.createFromResource(
             this,
@@ -96,7 +91,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
     // Parses gworld.json for future comparison with yelp businesses list
     fun parseGworldFile() {
         val reader = BufferedReader(
-            InputStreamReader(getAssets().open("filename.txt"), "UTF-8")
+            InputStreamReader(getAssets().open("gworld.json"), "UTF-8")
         )
         var resultsString: String? = null
         try {
