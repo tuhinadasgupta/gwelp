@@ -138,15 +138,27 @@
 },
 {
 "name": "Chipotle",
-"address": ["2000 Pennsylvania Ave NW, Washington, DC 20006","1837 M St NW, Washington, DC 20036"],
-"lat": [38.900372,38.905860],
-"lon": [-77.045532,-77.043220]
+"address": "2000 Pennsylvania Ave NW, Washington, DC 20006",
+"lat": 38.900372,
+"lon": -77.045532
+},
+{
+"name": "Chipotle",
+"address": "1837 M St NW, Washington, DC 20036",
+"lat": 38.905860,
+"lon": -77.043220
 },
 {
 "name": "Chopt Creative Salad Co.",
-"address": ["1105 1/2 19th St NW, Washington, DC 20036", "1730 Pennsylvania Ave NW, Washington, DC 20006"],
-"lat": [38.908950,38.898708],
-"lon": [-77.044540,-77.040398]
+"address": "1105 1/2 19th St NW, Washington, DC 20036",
+"lat": 38.908950,
+"lon": -77.044540
+},
+{
+"name": "Chopt Creative Salad Co.",
+"address": "1730 Pennsylvania Ave NW, Washington, DC 20006",
+"lat": 38.898708,
+"lon": -77.040398
 },
 {
 "name": "The Coffee Cart",
@@ -165,12 +177,6 @@
 "address": "2818 Pennsylvania Ave NW, Washington, DC 20007",
 "lat": 38.904960,
 "lon": -77.057690
-},
-{
-"name": "CVS Pharmacy",
-"address": ["2550 Virginia Ave NW, Washington, DC 20037", "2000 Pennsylvania Ave NW, Washington, DC 20006","2125 E St NW, Washington, DC 20037","4859 MacArthur Blvd NW, Washington, DC 20007"],
-"lat": [38.899030,38.900372,38.896420,38.916750],
-"lon": [-77.054810,-77.045532,-77.047730,-77.095400]
 },
 {
 "name": "DC Pizza",
@@ -282,9 +288,15 @@
 },
 {
 "name": "Jetties",
-"address": ["1921 I St NW, Washington, DC 20006","1609 Foxhall Rd NW, Washington, DC 20007"],
-"lat": [38.901560,38.911289],
-"lon": [-77.044560,-77.084030]
+"address": "1921 I St NW, Washington, DC 20006",
+"lat": 38.901560,
+"lon": -77.044560
+},
+{
+"name": "Jetties",
+"address": "1609 Foxhall Rd NW, Washington, DC 20007",
+"lat": 38.911289,
+"lon": -77.084030
 },
 {
 "name": "JRINK Juicery",
@@ -438,15 +450,33 @@
 },
 {
 "name": "Starbucks",
-"address": ["1957 E St NW, Washington, DC 20052","2130 H St NW, Washington, DC 20052","900 23rd St NW, Washington, DC 20037"],
-"lat": [38.896291,38.8992,38.901584],
-"lon": [-77.04424,-77.048419,-77.050338]
+"address": "1957 E St NW, Washington, DC 20052",
+"lat": 38.896291,
+"lon": -77.04424,
+},
+{
+"name": "Starbucks",
+"address": "2130 H St NW, Washington, DC 20052",
+"lat": 38.8992,
+"lon": -77.048419
+},
+{
+"name": "Starbucks",
+"address": "900 23rd St NW, Washington, DC 20037",
+"lat": 38.901584,
+"lon": -77.050338
 },
 {
 "name": "Subway",
-"address": ["900 23rd St NW, Washington, DC 20037","1959 E St NW Space C, Washington, DC 20052"],
-"lat": [38.901584,38.89604],
-"lon": [-77.050338,-77.04429]
+"address": "900 23rd St NW, Washington, DC 20037",
+"lat": 38.901584,
+"lon": -77.050338,
+},
+{
+"name": "Subway",
+"address": "1959 E St NW Space C, Washington, DC 20052",
+"lat": 38.89604,
+"lon": -77.04429
 },
 {
 "name": "Surfside Taco Stand",
