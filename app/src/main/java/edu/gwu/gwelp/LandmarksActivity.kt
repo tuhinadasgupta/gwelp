@@ -63,6 +63,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                     runOnUiThread {
                         businessesList.clear()
                         businessesList.addAll(businesses)
+                        reviewsList.clear()
                         findGworld(businessesList, gworldList)
                     }
                 },
@@ -134,32 +135,31 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
     fun findGworld(yelpResponse: List<Business>, gworlds: List<Business>) {
         var matchCount = 0
         Log.d("LandmarksActivity","findGworld called")
-        yelpResponse.forEach { yelpBusiness ->
+        yelpResponse/*.takeWhile {matchCount < 4}*/.forEach { yelpBusiness ->
             gworlds.forEach { gworldBusiness ->
                 if (
-                    yelpBusiness.lat.compareWithThreshold(gworldBusiness.lat, .015)
-                    && yelpBusiness.lon.compareWithThreshold(gworldBusiness.lon, .015)
+                    yelpBusiness.lat.compareWithThreshold(gworldBusiness.lat, .01)
+                    && yelpBusiness.lon.compareWithThreshold(gworldBusiness.lon, .01)
                     && yelpBusiness.name == gworldBusiness.name
                 ) {
-                    Log.d("LandmarksActivity","it's a match! $yelpBusiness")
+                    Log.d("LandmarksActivity","it's a match! $gworldBusiness")
+                    matchCount += 1
                     // Yelp Business Reviews API call using yelpBusiness.id
                     yelpManager.retrieveReviews(
                         apiKey = getString(R.string.yelp_api_key),
                         businessId = yelpBusiness.id,
                         successCallback = { reviews ->
                             Log.d("LandmarksActivity","in successCallback")
+                            Log.d("LandmarksActivity", "matchCount = $matchCount")
                             runOnUiThread {
-                                if (matchCount == 3) {
-                                    // Just go to main activity for now
-                                    val intent = Intent(this, MainActivity::class.java)
-                                    startActivity(intent)
-                                }
-                                matchCount += 1
-                                reviewsList.clear()
+//                                if (matchCount == 3) {
+//                                    // Just go to main activity for now
+//                                    val intent = Intent(this, MainActivity::class.java)
+//                                    startActivity(intent)
+//                                    return@runOnUiThread
+//                                }
                                 reviewsList.addAll(reviews)
-                                // Testing if i can get the reviewer name of the first result
-                                val test = reviewsList[0].yelper_name
-                                Toast.makeText(this@LandmarksActivity, test, Toast.LENGTH_LONG).show()
+                                Log.d("LandmarksActivity", "$reviewsList")
 
                             }
                         },
