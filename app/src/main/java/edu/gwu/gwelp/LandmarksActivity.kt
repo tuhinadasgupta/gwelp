@@ -3,6 +3,7 @@ package edu.gwu.gwelp
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import org.json.JSONArray
 import java.io.File
 import android.view.View
@@ -20,7 +21,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
     private val yelpManager: YelpManager = YelpManager()
     private val businessesList: MutableList<Business> = mutableListOf()
     private val gworldList: MutableList<Business> = mutableListOf()
-    private val reviews: MutableList<Review> = mutableListOf()
+    private val reviewsList: MutableList<Review> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,20 +65,18 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                         businessesList.addAll(businesses)
                         // Testing if i can get the name of the first result
                         val test = businessesList[0].name
-                        Toast.makeText(this@LandmarksActivity, "first result name: $test", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@LandmarksActivity, "0th result name: $test", Toast.LENGTH_LONG).show()
                         //Toast.makeText(this@LandmarksActivity, "Successfully retrieved businesses", Toast.LENGTH_LONG).show()
                     }
                 },
                 errorCallback = {
                     runOnUiThread {
-                        Toast.makeText(this@LandmarksActivity, "Error retrieving businesses", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@LandmarksActivity, getString(R.string.business_error), Toast.LENGTH_LONG).show()
                     }
                 }
             )
 
-//            doAsync {
-//                findGworld(businessesList, gworldList)
-//            }
+            findGworld(businessesList, gworldList)
 
         }
     }
@@ -133,46 +132,49 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
             )
 
         }
-        runOnUiThread{
-            val testParse = gworldList[40].name
-            Toast.makeText(this@LandmarksActivity, "test parse: $testParse", Toast.LENGTH_LONG).show()
-        }
     }
 
     // Compares list of yelp businesses to list of gworld businesses
     // Calls yelp api to retrieve review excerpts
     fun findGworld(yelpResponse: List<Business>, gworlds: List<Business>) {
+        Log.d("LandmarksActivity","findGworld called")
         yelpResponse.forEach { yelpBusiness ->
+            Log.d("LandmarksActivity", "after yelpResponse.forEach")
             gworlds.forEach { gworldBusiness ->
                 if (
-                    yelpBusiness.lat.compareWithThreshold(gworldBusiness.lat, .02)
-                    && yelpBusiness.lon.compareWithThreshold(gworldBusiness.lon, .02)
+                    yelpBusiness.lat.compareWithThreshold(gworldBusiness.lat, .015)
+                    && yelpBusiness.lon.compareWithThreshold(gworldBusiness.lon, .015)
                     && yelpBusiness.name == gworldBusiness.name
                 ) {
+                    Log.d("LandmarksActivity","inside the if statement")
                     // Yelp Business Reviews API call using yelpBusiness.id
-                    // Go to next activity displaying review excerpts
-//                    yelpManager.retrieveReviews(
-//                        apiKey = getString(R.string.yelp_api_key),
-//                        businessId = yelpBusiness.id,
-//                        successCallback = { review ->
-//                            runOnUiThread {
-//                                reviews.clear()
-//                                reviews.addAll(review)
-//                                // Testing if i can get the yelper name of the first result
-//                                val test = reviews[0].yelper_name
-//                                Toast.makeText(this@LandmarksActivity, "first result name: $test", Toast.LENGTH_LONG).show()
-//                            }
-//                        },
-//                        errorCallback = {
-//                            runOnUiThread {
-//                                Toast.makeText(this@LandmarksActivity, "Error retrieving reviews", Toast.LENGTH_LONG).show()
-//                            }
-//                        }
-//                    )
+                    yelpManager.retrieveReviews(
+                        apiKey = getString(R.string.yelp_api_key),
+                        businessId = yelpBusiness.id,
+                        successCallback = { reviews ->
+                            Log.d("LandmarksActivity","in successCallback")
+                            runOnUiThread {
+                                reviewsList.clear()
+                                reviewsList.addAll(reviews)
+                                // Testing if i can get the reviewer name of the first result
+                                val test = reviewsList[0].yelper_name
+                                Toast.makeText(this@LandmarksActivity, test, Toast.LENGTH_LONG).show()
+                            }
+                        },
+                        errorCallback = {
+                            runOnUiThread {
+                                Toast.makeText(this@LandmarksActivity, getString(R.string.review_error), Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    )
+                } else {
+                    Log.d("LandmarksActivity","inside the else")
+                    runOnUiThread {
+                        Toast.makeText(this@LandmarksActivity, getString(R.string.no_results), Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }
-
     }
 
     fun Double.compareWithThreshold(other: Double, threshold: Double): Boolean {
