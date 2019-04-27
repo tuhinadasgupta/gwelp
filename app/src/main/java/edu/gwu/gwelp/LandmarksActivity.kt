@@ -63,10 +63,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                     runOnUiThread {
                         businessesList.clear()
                         businessesList.addAll(businesses)
-                        // Testing if i can get the name of the first result
-                        val test = businessesList[0].name
-                        Toast.makeText(this@LandmarksActivity, "0th result name: $test", Toast.LENGTH_LONG).show()
-                        //Toast.makeText(this@LandmarksActivity, "Successfully retrieved businesses", Toast.LENGTH_LONG).show()
+                        findGworld(businessesList, gworldList)
                     }
                 },
                 errorCallback = {
@@ -75,8 +72,6 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                     }
                 }
             )
-
-            findGworld(businessesList, gworldList)
 
         }
     }
@@ -137,16 +132,16 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
     // Compares list of yelp businesses to list of gworld businesses
     // Calls yelp api to retrieve review excerpts
     fun findGworld(yelpResponse: List<Business>, gworlds: List<Business>) {
+        var matchCount = 0
         Log.d("LandmarksActivity","findGworld called")
         yelpResponse.forEach { yelpBusiness ->
-            Log.d("LandmarksActivity", "after yelpResponse.forEach")
             gworlds.forEach { gworldBusiness ->
                 if (
                     yelpBusiness.lat.compareWithThreshold(gworldBusiness.lat, .015)
                     && yelpBusiness.lon.compareWithThreshold(gworldBusiness.lon, .015)
                     && yelpBusiness.name == gworldBusiness.name
                 ) {
-                    Log.d("LandmarksActivity","inside the if statement")
+                    Log.d("LandmarksActivity","it's a match! $yelpBusiness")
                     // Yelp Business Reviews API call using yelpBusiness.id
                     yelpManager.retrieveReviews(
                         apiKey = getString(R.string.yelp_api_key),
@@ -154,26 +149,34 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                         successCallback = { reviews ->
                             Log.d("LandmarksActivity","in successCallback")
                             runOnUiThread {
+                                if (matchCount == 3) {
+                                    // Just go to main activity for now
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    startActivity(intent)
+                                }
+                                matchCount += 1
                                 reviewsList.clear()
                                 reviewsList.addAll(reviews)
                                 // Testing if i can get the reviewer name of the first result
                                 val test = reviewsList[0].yelper_name
                                 Toast.makeText(this@LandmarksActivity, test, Toast.LENGTH_LONG).show()
+
                             }
                         },
                         errorCallback = {
+                            Log.d("LandmarksActivity", "in errorCallback")
                             runOnUiThread {
                                 Toast.makeText(this@LandmarksActivity, getString(R.string.review_error), Toast.LENGTH_LONG).show()
                             }
                         }
                     )
                 } else {
-                    Log.d("LandmarksActivity","inside the else")
-                    runOnUiThread {
-                        Toast.makeText(this@LandmarksActivity, getString(R.string.no_results), Toast.LENGTH_LONG).show()
-                    }
+                    Log.d("LandmarksActivity","not a match")
                 }
             }
+        }
+        if (reviewsList.isEmpty()) {
+            Toast.makeText(this@LandmarksActivity, getString(R.string.no_results), Toast.LENGTH_LONG).show()
         }
     }
 
