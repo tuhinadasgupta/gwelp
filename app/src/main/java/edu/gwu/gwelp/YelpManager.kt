@@ -43,7 +43,9 @@ class YelpManager {
             .addPathSegments("v3/businesses/search")
             .addQueryParameter("location", address)
             .addQueryParameter("radius", "2000") // 2000 meters approx 1.25 miles
+            .addQueryParameter("limit", "40")
             .addQueryParameter("sort_by", "distance")
+            .addQueryParameter("price", "1, 2, 3")
             .build()
 
         // Building the request, passing the api key as a header
