@@ -477,7 +477,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
         "name": "Starbucks",
         "address": "1957 E St NW, Washington, DC 20052",
         "lat": 38.896291,
-        "lon": -77.04424,
+        "lon": -77.04424
         },
         {
         "name": "Starbucks",
@@ -495,7 +495,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
         "name": "Subway",
         "address": "900 23rd St NW, Washington, DC 20037",
         "lat": 38.901584,
-        "lon": -77.050338,
+        "lon": -77.050338
         },
         {
         "name": "Subway",
@@ -634,16 +634,13 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                 }
             )
 
-            doAsync {
-                parseGworldFile()
-                //findGworld(businessesList, gworldList)
-            }
+            parseGworldFile()
 
+//            doAsync {
+//                parseGworldFile()
+//                findGworld(businessesList, gworldList)
+//            }
 
-            //new intent page to be opened
-//            val intent = Intent(this, ::class.java)
-//            intent.putExtra("Landmark", selected)
-//            startActivity(intent)
         }
     }
 

@@ -452,7 +452,7 @@
 "name": "Starbucks",
 "address": "1957 E St NW, Washington, DC 20052",
 "lat": 38.896291,
-"lon": -77.04424,
+"lon": -77.04424
 },
 {
 "name": "Starbucks",
@@ -470,7 +470,7 @@
 "name": "Subway",
 "address": "900 23rd St NW, Washington, DC 20037",
 "lat": 38.901584,
-"lon": -77.050338,
+"lon": -77.050338
 },
 {
 "name": "Subway",
