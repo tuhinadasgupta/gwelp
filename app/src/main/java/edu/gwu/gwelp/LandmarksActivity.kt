@@ -65,6 +65,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                         businessesList.addAll(businesses)
                         reviewsList.clear()
                         findGworld(businessesList, gworldList)
+                        Log.d("LandmarksActivity", "reviewsList: $reviewsList")
                     }
                 },
                 errorCallback = {
@@ -135,48 +136,24 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
     fun findGworld(yelpResponse: List<Business>, gworlds: List<Business>) {
         var matchCount = 0
         Log.d("LandmarksActivity","findGworld called")
-        yelpResponse/*.takeWhile {matchCount < 4}*/.forEach { yelpBusiness ->
-            gworlds.forEach { gworldBusiness ->
+        yelpResponse.takeWhile{matchCount <= 3}.forEach { yelpBusiness ->
+            gworlds.takeWhile{matchCount <= 3}.forEach { gworldBusiness ->
                 if (
-                    yelpBusiness.lat.compareWithThreshold(gworldBusiness.lat, .01)
-                    && yelpBusiness.lon.compareWithThreshold(gworldBusiness.lon, .01)
+                    yelpBusiness.lat.compareWithThreshold(gworldBusiness.lat, .008)
+                    && yelpBusiness.lon.compareWithThreshold(gworldBusiness.lon, .008)
                     && yelpBusiness.name == gworldBusiness.name
                 ) {
                     Log.d("LandmarksActivity","it's a match! $gworldBusiness")
                     matchCount += 1
-                    // Yelp Business Reviews API call using yelpBusiness.id
-                    yelpManager.retrieveReviews(
-                        apiKey = getString(R.string.yelp_api_key),
-                        businessId = yelpBusiness.id,
-                        successCallback = { reviews ->
-                            Log.d("LandmarksActivity","in successCallback")
-                            Log.d("LandmarksActivity", "matchCount = $matchCount")
-                            runOnUiThread {
-//                                if (matchCount == 3) {
-//                                    // Just go to main activity for now
-//                                    val intent = Intent(this, MainActivity::class.java)
-//                                    startActivity(intent)
-//                                    return@runOnUiThread
-//                                }
-                                reviewsList.addAll(reviews)
-                                Log.d("LandmarksActivity", "$reviewsList")
-
-                            }
-                        },
-                        errorCallback = {
-                            Log.d("LandmarksActivity", "in errorCallback")
-                            runOnUiThread {
-                                Toast.makeText(this@LandmarksActivity, getString(R.string.review_error), Toast.LENGTH_LONG).show()
-                            }
-                        }
-                    )
+                    Log.d("LandmarksActivity", "matchCount = $matchCount")
+                    doAsync {
+                        // Yelp Business Reviews API call using yelpBusiness.id
+                        reviewsList.addAll(yelpManager.retrieveReviews(getString(R.string.yelp_api_key), yelpBusiness.id))
+                    }
                 } else {
                     Log.d("LandmarksActivity","not a match")
                 }
             }
-        }
-        if (reviewsList.isEmpty()) {
-            Toast.makeText(this@LandmarksActivity, getString(R.string.no_results), Toast.LENGTH_LONG).show()
         }
     }
 
