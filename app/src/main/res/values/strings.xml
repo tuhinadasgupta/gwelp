@@ -3,6 +3,7 @@
     <string name="login">Login</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="email">Email</string>
     <string name="cpassword">Confirm Password</string>
     <string name="csignup">Confirm Sign Up</string>
     <string name="sign_up">Sign Up</string>
@@ -22,5 +23,8 @@
         <item>Dupont Circle</item>
         <item>Farragut Square</item>
     </string-array>
+    <string name="business_error">Error retrieving businesses</string>
+    <string name="review_error">Error retrieving reviews</string>
+    <string name="no_results">There are no Gwelp places nearby ;(</string>
 
 </resources>
