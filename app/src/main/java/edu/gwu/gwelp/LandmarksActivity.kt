@@ -63,7 +63,6 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                     runOnUiThread {
                         businessesList.clear()
                         businessesList.addAll(businesses)
-                        reviewsList.clear()
                         findGworld(businessesList, gworldList)
                         Log.d("LandmarksActivity", "reviewsList: $reviewsList")
                     }
@@ -134,13 +133,15 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
     // Compares list of yelp businesses to list of gworld businesses
     // Calls yelp api to retrieve review excerpts
     fun findGworld(yelpResponse: List<Business>, gworlds: List<Business>) {
+        reviewsList.clear()
         var matchCount = 0
         Log.d("LandmarksActivity","findGworld called")
-        yelpResponse.takeWhile{matchCount <= 3}.forEach { yelpBusiness ->
-            gworlds.takeWhile{matchCount <= 3}.forEach { gworldBusiness ->
+        // Loops to get only 4 matches
+        yelpResponse.takeWhile{matchCount < 4}.forEach { yelpBusiness ->
+            gworlds.takeWhile{matchCount < 4}.forEach { gworldBusiness ->
                 if (
-                    yelpBusiness.lat.compareWithThreshold(gworldBusiness.lat, .008)
-                    && yelpBusiness.lon.compareWithThreshold(gworldBusiness.lon, .008)
+                    yelpBusiness.lat.compareWithThreshold(gworldBusiness.lat, .005)
+                    && yelpBusiness.lon.compareWithThreshold(gworldBusiness.lon, .005)
                     && yelpBusiness.name == gworldBusiness.name
                 ) {
                     Log.d("LandmarksActivity","it's a match! $gworldBusiness")
@@ -148,7 +149,12 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                     Log.d("LandmarksActivity", "matchCount = $matchCount")
                     doAsync {
                         // Yelp Business Reviews API call using yelpBusiness.id
-                        reviewsList.addAll(yelpManager.retrieveReviews(getString(R.string.yelp_api_key), yelpBusiness.id))
+                        reviewsList.addAll(
+                            yelpManager.retrieveReviews(
+                                getString(R.string.yelp_api_key),
+                                yelpBusiness.id
+                            )
+                        )
                     }
                 } else {
                     Log.d("LandmarksActivity","not a match")
