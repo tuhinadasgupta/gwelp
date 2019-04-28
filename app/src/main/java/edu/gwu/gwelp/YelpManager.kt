@@ -45,7 +45,7 @@ class YelpManager {
             .addQueryParameter("radius", "2000") // 2000 meters approx 1.25 miles
             .addQueryParameter("limit", "50")
             .addQueryParameter("sort_by", "distance")
-            .addQueryParameter("price", "1, 2, 3")
+            .addQueryParameter("price", "1, 2")
             .build()
 
         // Building the request, passing the api key as a header
