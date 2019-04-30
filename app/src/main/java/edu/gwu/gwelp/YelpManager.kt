@@ -26,6 +26,10 @@ class YelpManager {
 
         okHttpClient = builder.build()
     }
+    //y i k e s
+//    fun retrieveBusinessWithReviews(){
+//
+//    }
 
     // Get Yelp businesses within 1.25 miles of given address string, sorted by distance
     fun retrieveBusinesses(
