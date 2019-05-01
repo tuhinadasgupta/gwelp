@@ -53,7 +53,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
             ).show()
 
             yelpManager.retrieveBusinesses(
-                apiKey = getString(R.string.yelp_api_key),
+                apiKey = "2FiJ99z6XGdhm64nUPWCRlHW-T3q6_Z4U6_4c0dcGno9R_apdXZBMECogV5vxbnxqi6uBku-PAYLibwgXwMp5PZIB6MwT9b8EVh1l6zoR5gmvv-P8F278nM1J5m7XHYx",
                 address = selected,
                 successCallback = {businesses ->
                     runOnUiThread {
@@ -106,13 +106,22 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                 ) {
                     // Yelp Business Reviews API call using yelpBusiness.id
                     // Go to next activity displaying review excerpts
-//                    val yelpManager = YelpManager()
-//                    yelpManager.retrieveReviews(
-//                        apiKey = getString(R.string.yelp_api_key),
-//                        businessId = yelpBusiness.id,
-//                        successCallback = {},
-//                        errorCallback = {}
-//                    )
+                    val yelpManager = YelpManager()
+                    yelpManager.retrieveReviews(
+                        apiKey = "2FiJ99z6XGdhm64nUPWCRlHW-T3q6_Z4U6_4c0dcGno9R_apdXZBMECogV5vxbnxqi6uBku-PAYLibwgXwMp5PZIB6MwT9b8EVh1l6zoR5gmvv-P8F278nM1J5m7XHYx",
+                        businessId = yelpBusiness.id,
+                        successCallback = {reviews->
+                            val businessWithReviews = BusinessWithReviews(yelpBusiness,reviews);
+                            val intent = Intent(this, DisplayActivity::class.java)
+                            intent.putExtra("businessReview", businessWithReviews)
+                            startActivity(intent)
+                        },
+                        errorCallback = {
+                            runOnUiThread {
+                                Toast.makeText(this@LandmarksActivity, "Error", Toast.LENGTH_LONG).show() //display error message
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -125,3 +134,5 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
 }
+
+
