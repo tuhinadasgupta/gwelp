@@ -97,7 +97,7 @@ class YelpManager {
     fun retrieveReviews(
         apiKey: String,
         businessId: String
-    ): List<Review> {
+    ): MutableList<Review> {
         val reviews = mutableListOf<Review>()
 
         val request = Request.Builder()
