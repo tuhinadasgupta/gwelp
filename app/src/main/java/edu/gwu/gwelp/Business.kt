@@ -1,4 +1,5 @@
 package edu.gwu.gwelp
+import java.io.Serializable
 
 data class Business (
     val name: String,
@@ -6,5 +7,6 @@ data class Business (
     val address: String,
     val lat: Double,
     val lon: Double
+): Serializable
 
-)
+
