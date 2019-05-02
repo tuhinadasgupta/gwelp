@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.widget.Toast
 
 class DisplayActivity : AppCompatActivity() {
@@ -18,9 +19,7 @@ class DisplayActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         val stringBR: MutableList<BusinessWithReviews> =intent.getSerializableExtra("businessReview") as MutableList<BusinessWithReviews>
-        for(i in stringBR){
-            println(stringBR)
-        }
+        println(stringBR[0])
 //        displayManager.retrieveBusinessWithReviews(
 //            successCallback =
 // { reviewsWB ->

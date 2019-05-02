@@ -50,14 +50,9 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
         val selected : String
         if (pos != 0) {
             selected = parent.getItemAtPosition(pos) as String
-//            Toast.makeText(
-//                this,
-//                "$selected was selected!",
-//                Toast.LENGTH_LONG
-//            ).show()
 
             yelpManager.retrieveBusinesses(
-                apiKey = getString(R.string.yelp_api_key),
+                apiKey = "2FiJ99z6XGdhm64nUPWCRlHW-T3q6_Z4U6_4c0dcGno9R_apdXZBMECogV5vxbnxqi6uBku-PAYLibwgXwMp5PZIB6MwT9b8EVh1l6zoR5gmvv-P8F278nM1J5m7XHYx",
                 address = selected,
                 successCallback = {businesses ->
                     businessesList.clear()
@@ -168,7 +163,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                     businessWithReviews.add(BusinessWithReviews(yelpBusiness,reviewsList));
                     reviewsList.addAll(
                         yelpManager.retrieveReviews(
-                            getString(R.string.yelp_api_key),,
+                            "2FiJ99z6XGdhm64nUPWCRlHW-T3q6_Z4U6_4c0dcGno9R_apdXZBMECogV5vxbnxqi6uBku-PAYLibwgXwMp5PZIB6MwT9b8EVh1l6zoR5gmvv-P8F278nM1J5m7XHYx",
                             yelpBusiness.id
                         )
                     )
