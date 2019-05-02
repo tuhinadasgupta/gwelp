@@ -18,7 +18,7 @@ class DisplayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display)
         recyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(this) //as RecyclerView.LayoutManager?
         val stringBR: MutableList<BusinessWithReviews> =
             intent.getSerializableExtra("businessReview") as MutableList<BusinessWithReviews>
         //println(stringBR[0])
