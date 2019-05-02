@@ -10,36 +10,22 @@ import android.widget.Toast
 
 class DisplayActivity : AppCompatActivity() {
 
-   // private val displayManager: YelpManager = YelpManager()
+    // private val displayManager: YelpManager = YelpManager()
     private lateinit var recyclerView: RecyclerView
+
     //creates recyclerView of Alerts
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display)
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        val stringBR: MutableList<BusinessWithReviews> =intent.getSerializableExtra("businessReview") as MutableList<BusinessWithReviews>
-        println(stringBR[0])
-//        displayManager.retrieveBusinessWithReviews(
-//            successCallback =
-// { reviewsWB ->
-//                runOnUiThread {
-//                    if (reviewsWB.isNotEmpty()){
-//                        recyclerView.adapter = DisplayAdapter(reviewsWB)
-//                    }
-//                    else{
-//                        // defensive error check in case of nothing to display
-//                        Toast.makeText(this@DisplayActivity, "Nothing to show", Toast.LENGTH_LONG).show()
-//                    }
-//                }
-//            },
-//            errorCallback = {
-//                runOnUiThread {
-//                    // defensive error check if something goes wrong
-//                    Toast.makeText(this@DisplayActivity, "Error retrieving information", Toast.LENGTH_LONG).show()
-//                }
-//            }
-//        )
-
+        val stringBR: MutableList<BusinessWithReviews> =
+            intent.getSerializableExtra("businessReview") as MutableList<BusinessWithReviews>
+        //println(stringBR[0])
+        if (stringBR.isNotEmpty()) {
+            recyclerView.adapter = DisplayAdapter(stringBR)
+        } else {
+            Toast.makeText(this@DisplayActivity, "No Reviews to show", Toast.LENGTH_LONG).show()
+        }
     }
 }
