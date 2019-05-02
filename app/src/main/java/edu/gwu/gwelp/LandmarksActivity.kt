@@ -52,7 +52,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
             selected = parent.getItemAtPosition(pos) as String
 
             yelpManager.retrieveBusinesses(
-                apiKey = "2FiJ99z6XGdhm64nUPWCRlHW-T3q6_Z4U6_4c0dcGno9R_apdXZBMECogV5vxbnxqi6uBku-PAYLibwgXwMp5PZIB6MwT9b8EVh1l6zoR5gmvv-P8F278nM1J5m7XHYx",
+                apiKey = getString(R.string.yelp_api_key),
                 address = selected,
                 successCallback = {businesses ->
                     businessesList.clear()
@@ -143,7 +143,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                     businessWithReviews.add(BusinessWithReviews(yelpBusiness,ArrayList(reviewsList)));
                     reviewsList.addAll(
                         yelpManager.retrieveReviews(
-                            "2FiJ99z6XGdhm64nUPWCRlHW-T3q6_Z4U6_4c0dcGno9R_apdXZBMECogV5vxbnxqi6uBku-PAYLibwgXwMp5PZIB6MwT9b8EVh1l6zoR5gmvv-P8F278nM1J5m7XHYx",
+                            getString(R.string.yelp_api_key),
                             yelpBusiness.id
                         )
                     )
