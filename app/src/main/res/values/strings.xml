@@ -3,13 +3,13 @@
     <string name="login">Login</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="email">Email</string>
     <string name="cpassword">Confirm Password</string>
     <string name="csignup">Confirm Sign Up</string>
     <string name="sign_up">Sign Up</string>
     <string name="remember_username">Remember Username</string>
     <string name="remember_password">Remember Password</string>
     <string name="landmark_title">Select a Landmark:</string>
-    <string name="restnearland">Restaurants Near Landmark</string>
     <string-array name="places_array" >
         <item>Select A Landmark: </item>
         <item>UN Foundation </item>
@@ -23,5 +23,9 @@
         <item>Dupont Circle</item>
         <item>Farragut Square</item>
     </string-array>
+    <string name="business_error">Error retrieving businesses</string>
+    <string name="review_error">Error retrieving reviews</string>
+    <string name="no_results">There are no Gwelp places nearby ;(</string>
+    <string name="restnearland">Restaurants Near Landmark: </string>
 
 </resources>

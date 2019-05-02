@@ -3,6 +3,7 @@ package edu.gwu.gwelp
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import org.json.JSONArray
 import java.io.File
 import android.view.View
@@ -10,22 +11,25 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import org.jetbrains.anko.doAsync
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 
 class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener  {
     private lateinit var spinner: Spinner
     private val yelpManager: YelpManager = YelpManager()
     private val businessesList: MutableList<Business> = mutableListOf()
-
-   // private lateinit var recyclerView: RecyclerView
-
+    private val gworldList: MutableList<Business> = mutableListOf()
+    private val reviewsList: MutableList<Review> = mutableListOf()
+    private var businessWithReviews: MutableList<BusinessWithReviews> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_spinner)
         spinner = findViewById(R.id.spinner)
 
-//        recyclerView = findViewById(R.id.recyclerView)
-//        recyclerView.layoutManager = LinearLayoutManager(this)
+        parseGworldFile()
 
         ArrayAdapter.createFromResource(
             this,
@@ -45,37 +49,29 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
         // An item was selected. You can retrieve the selected item using
         val selected : String
         if (pos != 0) {
-             selected = parent.getItemAtPosition(pos) as String
-            Toast.makeText(
-                this,
-                "$selected was selected!",
-                Toast.LENGTH_LONG
-            ).show()
+            selected = parent.getItemAtPosition(pos) as String
+//            Toast.makeText(
+//                this,
+//                "$selected was selected!",
+//                Toast.LENGTH_LONG
+//            ).show()
 
             yelpManager.retrieveBusinesses(
                 apiKey = "2FiJ99z6XGdhm64nUPWCRlHW-T3q6_Z4U6_4c0dcGno9R_apdXZBMECogV5vxbnxqi6uBku-PAYLibwgXwMp5PZIB6MwT9b8EVh1l6zoR5gmvv-P8F278nM1J5m7XHYx",
                 address = selected,
                 successCallback = {businesses ->
-                    runOnUiThread {
-                        businessesList.clear()
-                        businessesList.addAll(businesses)
-                        // Testing if i can get the name of the first result
-                        val test = businessesList[0].name
-                        Toast.makeText(this@LandmarksActivity, "first result name: $test", Toast.LENGTH_LONG).show()
-                        //Toast.makeText(this@LandmarksActivity, "Successfully retrieved businesses", Toast.LENGTH_LONG).show()
-                    }
+                    businessesList.clear()
+                    businessesList.addAll(businesses)
+                    findGworld(businessesList, gworldList)
+                    Log.d("LandmarksActivity", "reviewsList: $reviewsList")
                 },
                 errorCallback = {
                     runOnUiThread {
-                        Toast.makeText(this@LandmarksActivity, "Error retrieving businesses", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@LandmarksActivity, getString(R.string.business_error), Toast.LENGTH_LONG).show()
                     }
                 }
             )
 
-            //new intent page to be opened
-//            val intent = Intent(this, ::class.java)
-//            intent.putExtra("Landmark", selected)
-//            startActivity(intent)
         }
     }
 
@@ -89,50 +85,111 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     }
 
-    fun findGworldRestaurants(yelpResponse: List<Business>) {
-        val gworldString: String = File("/gworld.json").readText(Charsets.UTF_8)
-        val jsonArray = JSONArray(gworldString)
-        yelpResponse.forEach  { yelpBusiness->
-            for (i in 0 until jsonArray.length()) {
-                val curr = jsonArray.getJSONObject(i)
-                val gworldName = curr.getString("name")
-                val gworldLat = curr.getDouble("lat")
-                val gworldLon = curr.getDouble("lon")
+    // Parses gworld.json for future comparison with yelp businesses list
+    fun parseGworldFile() {
+        gworldList.clear()
+        val reader = BufferedReader(
+            InputStreamReader(getAssets().open("gworld.json"), "UTF-8")
+        )
+        var resultsString: String? = null
+        try {
+            val results = StringBuilder()
+            while (true) {
+                val line = reader.readLine()
+                if (line == null) break
+                results.append(line)
+            }
+            resultsString = results.toString()
+        }
+        catch (e:IOException) {
+            Toast.makeText(this@LandmarksActivity, "Uh oh something went wrong!", Toast.LENGTH_LONG).show()
+        }
+        finally {
+            reader.close()
+        }
 
+        val jsonArray = JSONArray(resultsString)
+        for (i in 0 until jsonArray.length()) {
+            val curr = jsonArray.getJSONObject(i)
+            val gworldName = curr.getString("name")
+            val gworldAddress = curr.getString("address")
+            val gworldLat = curr.getDouble("lat")
+            val gworldLon = curr.getDouble("lon")
+            gworldList.add (
+                Business(
+                    name = gworldName,
+                    id = "",
+                    address = gworldAddress,
+                    lat = gworldLat,
+                    lon = gworldLon
+                )
+            )
+
+        }
+    }
+
+    // Compares list of yelp businesses to list of gworld businesses
+    // Calls yelp api to retrieve review excerpts
+    fun findGworld(yelpResponse: List<Business>, gworlds: List<Business>) {
+        reviewsList.clear()
+        var matchCount = 0
+        Log.d("LandmarksActivity","findGworld called")
+
+//        // Find all GWorld Restaurants which exist in the Yelp Response
+//        // (you could also flip this and find all businesses in the Yelp Response which exist in Gworld)
+//        val matchedRestaurants = gworlds.filter { gworldBusiness ->
+//            yelpResponse.find { yelpBusiness ->
+//                yelpBusiness.lat.compareWithThreshold(gworldBusiness.lat, .005)
+//                        && yelpBusiness.lon.compareWithThreshold(gworldBusiness.lon, .005)
+//                        && yelpBusiness.name == gworldBusiness.name
+//            } != null // Find returns null if there are no matches that fulfill the criteria above
+//        }
+//
+//        // Take only the first 3 found restaurants and retrieve their reviews
+//        matchedRestaurants.take(3).forEach { business ->
+//            reviewsList.addAll(
+//                yelpManager.retrieveReviews(
+//                    getString(R.string.yelp_api_key),
+//                    business.id
+//                )
+//            )
+//        }
+        // Loops to get only 3 matches
+        yelpResponse.takeWhile{matchCount < 3}.forEach { yelpBusiness ->
+            gworlds.takeWhile{matchCount < 3}.forEach { gworldBusiness ->
                 if (
-                    yelpBusiness.lat.compareWithThreshold(gworldLat, .02)
-                    && yelpBusiness.lon.compareWithThreshold(gworldLon, .02)
-                    && yelpBusiness.name == gworldName
+                    yelpBusiness.lat.compareWithThreshold(gworldBusiness.lat, .005)
+                    && yelpBusiness.lon.compareWithThreshold(gworldBusiness.lon, .005)
+                    && yelpBusiness.name == gworldBusiness.name
                 ) {
+                    Log.d("LandmarksActivity","it's a match! $gworldBusiness")
+                    matchCount += 1
+                    Log.d("LandmarksActivity", "matchCount = $matchCount")
                     // Yelp Business Reviews API call using yelpBusiness.id
-                    // Go to next activity displaying review excerpts
-                    val yelpManager = YelpManager()
-                    yelpManager.retrieveReviews(
-                        apiKey = "2FiJ99z6XGdhm64nUPWCRlHW-T3q6_Z4U6_4c0dcGno9R_apdXZBMECogV5vxbnxqi6uBku-PAYLibwgXwMp5PZIB6MwT9b8EVh1l6zoR5gmvv-P8F278nM1J5m7XHYx",
-                        businessId = yelpBusiness.id,
-                        successCallback = {reviews->
-                            val businessWithReviews = BusinessWithReviews(yelpBusiness,reviews);
-                            val intent = Intent(this, DisplayActivity::class.java)
-                            intent.putExtra("businessReview", businessWithReviews)
-                            startActivity(intent)
-                        },
-                        errorCallback = {
-                            runOnUiThread {
-                                Toast.makeText(this@LandmarksActivity, "Error", Toast.LENGTH_LONG).show() //display error message
-                            }
-                        }
+                    businessWithReviews.add(BusinessWithReviews(yelpBusiness,reviewsList));
+                    reviewsList.addAll(
+                        yelpManager.retrieveReviews(
+                            "2FiJ99z6XGdhm64nUPWCRlHW-T3q6_Z4U6_4c0dcGno9R_apdXZBMECogV5vxbnxqi6uBku-PAYLibwgXwMp5PZIB6MwT9b8EVh1l6zoR5gmvv-P8F278nM1J5m7XHYx",
+                            yelpBusiness.id
+                        )
                     )
+                     //(yelpBusiness,reviewsList);
+                } else {
+                    Log.d("LandmarksActivity","not a match")
                 }
             }
         }
-
+        runOnUiThread {
+            //Toast.makeText(this@LandmarksActivity, reviewsList[0].yelper_name, Toast.LENGTH_LONG).show()
+            // ***Go to new activity here to display results***
+            val intent = Intent(this, DisplayActivity::class.java)
+            intent.putExtra("businessReview", ArrayList(businessWithReviews))
+        }
     }
 
     fun Double.compareWithThreshold(other: Double, threshold: Double): Boolean {
-        return this > other && this <= other + threshold ||
-                this < other && this >= other - threshold
+        return this >= other && this <= other + threshold ||
+                this <= other && this >= other - threshold
     }
 
 }
-
-
