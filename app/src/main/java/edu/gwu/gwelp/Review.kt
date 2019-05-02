@@ -1,5 +1,7 @@
 package edu.gwu.gwelp
 
+import java.io.Serializable
+
 data class Review (
     val business_id: String,
     val rating: Int,
@@ -8,4 +10,4 @@ data class Review (
     val text: String,
     val time_created: String,
     val url: String
-)
+): Serializable
