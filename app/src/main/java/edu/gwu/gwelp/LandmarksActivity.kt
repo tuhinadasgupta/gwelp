@@ -50,14 +50,9 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
         val selected : String
         if (pos != 0) {
             selected = parent.getItemAtPosition(pos) as String
-//            Toast.makeText(
-//                this,
-//                "$selected was selected!",
-//                Toast.LENGTH_LONG
-//            ).show()
 
             yelpManager.retrieveBusinesses(
-                apiKey = getString(R.string.yelp_api_key),
+                apiKey = "2FiJ99z6XGdhm64nUPWCRlHW-T3q6_Z4U6_4c0dcGno9R_apdXZBMECogV5vxbnxqi6uBku-PAYLibwgXwMp5PZIB6MwT9b8EVh1l6zoR5gmvv-P8F278nM1J5m7XHYx",
                 address = selected,
                 successCallback = {businesses ->
                     businessesList.clear()
@@ -133,26 +128,6 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
         reviewsList.clear()
         var matchCount = 0
         Log.d("LandmarksActivity","findGworld called")
-
-//        // Find all GWorld Restaurants which exist in the Yelp Response
-//        // (you could also flip this and find all businesses in the Yelp Response which exist in Gworld)
-//        val matchedRestaurants = gworlds.filter { gworldBusiness ->
-//            yelpResponse.find { yelpBusiness ->
-//                yelpBusiness.lat.compareWithThreshold(gworldBusiness.lat, .005)
-//                        && yelpBusiness.lon.compareWithThreshold(gworldBusiness.lon, .005)
-//                        && yelpBusiness.name == gworldBusiness.name
-//            } != null // Find returns null if there are no matches that fulfill the criteria above
-//        }
-//
-//        // Take only the first 3 found restaurants and retrieve their reviews
-//        matchedRestaurants.take(3).forEach { business ->
-//            reviewsList.addAll(
-//                yelpManager.retrieveReviews(
-//                    getString(R.string.yelp_api_key),
-//                    business.id
-//                )
-//            )
-//        }
         // Loops to get only 3 matches
         yelpResponse.takeWhile{matchCount < 3}.forEach { yelpBusiness ->
             gworlds.takeWhile{matchCount < 3}.forEach { gworldBusiness ->
@@ -165,10 +140,10 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                     matchCount += 1
                     Log.d("LandmarksActivity", "matchCount = $matchCount")
                     // Yelp Business Reviews API call using yelpBusiness.id
-                    businessWithReviews.add(BusinessWithReviews(yelpBusiness,reviewsList));
+                    businessWithReviews.add(BusinessWithReviews(yelpBusiness,ArrayList(reviewsList)));
                     reviewsList.addAll(
                         yelpManager.retrieveReviews(
-                            getString(R.string.yelp_api_key),,
+                            "2FiJ99z6XGdhm64nUPWCRlHW-T3q6_Z4U6_4c0dcGno9R_apdXZBMECogV5vxbnxqi6uBku-PAYLibwgXwMp5PZIB6MwT9b8EVh1l6zoR5gmvv-P8F278nM1J5m7XHYx",
                             yelpBusiness.id
                         )
                     )
@@ -180,9 +155,9 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
         runOnUiThread {
             //Toast.makeText(this@LandmarksActivity, reviewsList[0].yelper_name, Toast.LENGTH_LONG).show()
             // ***Go to new activity here to display results***
-
             val intent = Intent(this, DisplayActivity::class.java)
             intent.putExtra("businessReview", ArrayList(businessWithReviews))
+            startActivity(intent)
         }
     }
 
