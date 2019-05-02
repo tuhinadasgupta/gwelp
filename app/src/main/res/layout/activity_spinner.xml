@@ -5,6 +5,7 @@
 
 
     <Spinner
+
             android:layout_width="246dp"
             android:layout_height="140dp"
             android:id="@+id/spinner" android:layout_marginBottom="400dp"
@@ -23,5 +24,5 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="32dp" android:layout_marginEnd="32dp"
             app:layout_constraintHorizontal_bias="0.465" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="32dp"/>
+            android:layout_marginTop="32dp" android:textAlignment="center"/>
 </android.support.constraint.ConstraintLayout>
