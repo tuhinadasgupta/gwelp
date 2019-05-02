@@ -20,6 +20,8 @@
         </activity>
         <activity android:name=".SignUp"/>
         <activity android:name=".LandmarksActivity"/>
+        <activity android:name=".DisplayActivity"/>
+
 
     </application>
 

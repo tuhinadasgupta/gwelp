@@ -26,5 +26,7 @@
     <string name="business_error">Error retrieving businesses</string>
     <string name="review_error">Error retrieving reviews</string>
     <string name="no_results">There are no Gwelp places nearby ;(</string>
+    <string name="restnearland">Restaurants Near Landmark: </string>
+
 
 </resources>

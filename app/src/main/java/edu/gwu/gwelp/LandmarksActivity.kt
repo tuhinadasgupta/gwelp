@@ -22,7 +22,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
     private val businessesList: MutableList<Business> = mutableListOf()
     private val gworldList: MutableList<Business> = mutableListOf()
     private val reviewsList: MutableList<Review> = mutableListOf()
-
+    private var businessWithReviews: MutableList<BusinessWithReviews> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +49,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
         // An item was selected. You can retrieve the selected item using
         val selected : String
         if (pos != 0) {
-             selected = parent.getItemAtPosition(pos) as String
+            selected = parent.getItemAtPosition(pos) as String
 //            Toast.makeText(
 //                this,
 //                "$selected was selected!",
@@ -99,7 +99,7 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                 if (line == null) break
                 results.append(line)
             }
-           resultsString = results.toString()
+            resultsString = results.toString()
         }
         catch (e:IOException) {
             Toast.makeText(this@LandmarksActivity, "Uh oh something went wrong!", Toast.LENGTH_LONG).show()
@@ -107,7 +107,6 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
         finally {
             reader.close()
         }
-
         val jsonArray = JSONArray(resultsString)
         for (i in 0 until jsonArray.length()) {
             val curr = jsonArray.getJSONObject(i)
@@ -166,9 +165,10 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
                     matchCount += 1
                     Log.d("LandmarksActivity", "matchCount = $matchCount")
                     // Yelp Business Reviews API call using yelpBusiness.id
+                    businessWithReviews.add(BusinessWithReviews(yelpBusiness,reviewsList));
                     reviewsList.addAll(
                         yelpManager.retrieveReviews(
-                            getString(R.string.yelp_api_key),
+                            getString(R.string.yelp_api_key),,
                             yelpBusiness.id
                         )
                     )
@@ -180,6 +180,9 @@ class LandmarksActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener
         runOnUiThread {
             //Toast.makeText(this@LandmarksActivity, reviewsList[0].yelper_name, Toast.LENGTH_LONG).show()
             // ***Go to new activity here to display results***
+
+            val intent = Intent(this, DisplayActivity::class.java)
+            intent.putExtra("businessReview", ArrayList(businessWithReviews))
         }
     }
 
