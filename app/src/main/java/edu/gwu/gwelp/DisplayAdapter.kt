@@ -18,10 +18,13 @@ class DisplayAdapter constructor(private val array: List<BusinessWithReviews>) :
         holder.lineNameTextView.text = currBusinesses.name
         //sketchy line below
         holder.lineNameTextView2.text = currBusinesses.rating.toString()
+        holder.lineNameTextView3.text = currBusinesses.text.toString()
+
 
     }
     class ViewHolder constructor(view: View) : RecyclerView.ViewHolder(view) {
         val lineNameTextView: TextView = view.findViewById(R.id.name)
         val lineNameTextView2: TextView = view.findViewById(R.id.rating)
+        val lineNameTextView3: TextView = view.findViewById(R.id.text)
     }
 }
